@@ -8,3 +8,9 @@ spring:
     password: 123456
     driver-class-name: com.mysql.cj.jdbc.Driver
 
+
+github:
+  client:
+    id: fbebd0b662e102ae0a51
+    secret: 54f9f373e21ecc2dfe43c53c7caba1f2c35cbc25
+    Redirect_uri: http://127.0.0.1/callback
