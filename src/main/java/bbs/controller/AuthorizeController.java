@@ -2,6 +2,8 @@ package bbs.controller;
 
 import bbs.dto.AccessTokenDTO;
 import bbs.dto.GithubUser;
+import bbs.mapper.UserMapper;
+import bbs.model.User;
 import bbs.provider.GithubProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -10,6 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.UUID;
 
 @Controller
 public class AuthorizeController {
@@ -24,6 +27,9 @@ public class AuthorizeController {
     @Value("${github.client.Redirect_uri}")
     private String Redirect_uri;
 
+    @Autowired
+    private UserMapper userMapper;
+
     @GetMapping("/callback")
     public String callback(@RequestParam(name = "code") String code,
                            @RequestParam(name = "state") String state,
@@ -37,14 +43,23 @@ public class AuthorizeController {
         accessTokenDTO.setState(state);
 
         String accessToken = githubProvider.getAccessToken(accessTokenDTO);
-        GithubUser user = githubProvider.getUser(accessToken);
+        GithubUser githubUser = githubProvider.getUser(accessToken);
 
         /*todo
          * ok   -> session
          * fail -> gg
          * */
-        if (user != null) {
-            request.getSession().setAttribute("user", user);
+        if (githubUser != null) {
+            // write database
+            User user = new User();
+            user.setName(githubUser.getName());
+            user.setToken(UUID.randomUUID().toString());
+            user.setAccountId(String.valueOf(githubUser.getId()));
+            user.setGmtCreate(String.valueOf(System.currentTimeMillis()));
+            user.setGmtModified(user.getGmtCreate());
+            userMapper.insert(user);
+            // set session
+            request.getSession().setAttribute("user", githubUser);
             return "redirect:index";
         } else {
             return "redirect:index";
