@@ -8,6 +8,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" href="css/bootstrap.min.css">
     <link rel="stylesheet" href="css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="css/bbs.css">
     <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.1/jquery.js"></script>
     <script src="js/bootstrap.min.js" type="application/javascript"></script>
 
@@ -45,5 +46,35 @@
             </div><!-- /.navbar-collapse -->
         </div><!-- /.container-fluid -->
     </nav>
+
+    <div class="container-fluid main">
+        <div class="row">
+            <!-- left pad -->
+            <div class="col-lg-9 col-md-12 col-sm-12">
+                <h2><span class="glyphicon glyphicon-list" aria-hidden="true"></span> 发现 </h2>
+                <!-- iteration -->
+                <div class="media" th:each="post: ${posts}">
+                    <div class="media-left">
+                        <a href="#">
+                            <img class="media-object img-rounded" th:src="${post.user.avatarUrl}">
+                        </a>
+                    </div>
+                    <div class="media-body">
+                        <h4 class="media-heading" th:text="${post.title}">Media heading</h4>
+                        <p th:text="${post.description}">this is a desc</p>
+                        <span class="text-desc">
+                            <span th:text="${post.commentCount}">2</span> 个回复 •
+                            <span th:text="${post.viewCount}">326</span> 次浏览 •
+                            <span th:text="${#dates.format(post.gmtCreate,'yyyy-MM-dd hh:mm')}">2022-10-08 12:04</span>
+                        </span>
+                    </div>
+                </div><!-- iteration -->
+            </div><!-- left pad -->
+            <!-- right pad -->
+            <div class="col-lg-3 col-md-12 col-sm-12">
+                <h3>热门榜单</h3>
+            </div><!-- right pad -->
+        </div>
+    </div>
 </body>
 </html>

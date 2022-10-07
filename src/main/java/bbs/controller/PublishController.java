@@ -78,6 +78,7 @@ public class PublishController {
         post.setTag(tag);
         post.setGmtCreate(System.currentTimeMillis());
         post.setGmtModified(post.getGmtCreate());
+        post.setCreator(user.getId());
 
         postMapper.create(post);
         return "redirect:/";
