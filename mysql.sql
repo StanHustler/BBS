@@ -7,7 +7,8 @@ create table user
     token        char(36)     null,
     gmt_create   bigint       null,
     gmt_modified bigint       null,
-    bio          varchar(256) null comment 'biography'
+    bio          varchar(256) null comment 'biography',
+    avatar_url   varchar(100) null
 );
 
 create table post
