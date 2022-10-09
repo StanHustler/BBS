@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title th:text="${sectionName}">Profile</title>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="css/bbs.css">
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.1/jquery.js"></script>
+    <script src="js/bootstrap.min.js" type="application/javascript"></script>
+
+</head>
+<body>
+    <div th:insert="navigation::nav"></div>
+
+    <div class="container-fluid main">
+        <div class="row">
+            <!-- left pad -->
+            <div class="col-lg-9 col-md-12 col-sm-12">
+                <h2><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> 发起 </h2>
+                <form action="/publish" method="post">
+                    <div class="form-group">
+                        <label for="title">Title</label>
+                        <input type="text" class="form-control" id="title" name="title" placeholder="what it will be..." th:value="${title}">
+                    </div>
+                    <div class="form-group">
+                        <label for="description">Description</label>
+                        <textarea id="description" name="description" class="form-control" cols="30" rows="10" th:text="${description}"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="tag">Tags</label>
+                        <input type="text" class="form-control" id="tag" name="tag" placeholder="input tags, split with ," th:value="${tag}">
+                    </div>
+                    <span class="alert alert-danger" th:text="${error}" th:if="${error != null}"></span>
+                    <button type="submit" class="btn btn-success btn-publish">SUBMIT</button>
+                </form>
+            </div><!-- left pad -->
+            <!-- right pad -->
+            <div class="col-lg-3 col-md-12 col-sm-12">
+                <h3>Guide</h3>
+                <p>• Title: bla bla bla</p>
+                <p>• Description: bla bla bla</p>
+                <p>• Tag: bla bla bla</p>
+            </div><!-- right pad -->
+        </div>
+    </div>
+</body>
+</html>
