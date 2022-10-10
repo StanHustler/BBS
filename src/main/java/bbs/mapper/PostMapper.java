@@ -20,4 +20,7 @@ public interface PostMapper {
 
     @Select("select count(*) from post")
     Integer count();
+
+    @Select("select * from post where id = #{id}")
+    Post getById(@Param("id") String id);
 }

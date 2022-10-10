@@ -29,7 +29,9 @@
                         </a>
                     </div>
                     <div class="media-body">
-                        <h4 class="media-heading" th:text="${post.title}">Media heading</h4>
+                        <a th:href="@{'/post/'+${post.id}}">
+                            <h4 class="media-heading" th:text="${post.title}">Media heading</h4>
+                        </a>
                         <p th:text="${post.description}">this is a desc</p>
                         <span class="text-desc">
                             <span th:text="${post.commentCount}">2</span> 个回复 •

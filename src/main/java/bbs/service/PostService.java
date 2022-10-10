@@ -44,4 +44,12 @@ public class PostService {
         paginationDTO.setPosts(postDTOList);
         return paginationDTO;
     }
+
+    public PostDTO getById(String id) {
+        Post post =  postMapper.getById(id);
+        PostDTO postDTO = new PostDTO();
+        BeanUtils.copyProperties(post,postDTO);
+        postDTO.setUser(userMapper.findById(post.getCreator()));
+        return postDTO;
+    }
 }
