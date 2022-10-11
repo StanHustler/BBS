@@ -24,20 +24,20 @@ public class PostService {
     public PaginationDTO list(Integer page, Integer size) {
         PaginationDTO paginationDTO = new PaginationDTO();
         Integer totalCount = postMapper.count();
-        paginationDTO.setPagination(totalCount,page,size);
+        paginationDTO.setPagination(totalCount, page, size);
         // error response
         if (page < 1) page = 1;
         if (page > paginationDTO.getTotalPage()) page = paginationDTO.getTotalPage();
 
-        Integer offset = size * (page -1);
-        List<Post> posts = postMapper.list(offset,size);
+        Integer offset = size * (page - 1);
+        List<Post> posts = postMapper.list(offset, size);
         List<PostDTO> postDTOList = new ArrayList<>();
 
-        for (Post post:posts){
+        for (Post post : posts) {
             // put a user as property and whole post into postDTO
-            User user =  userMapper.findById(post.getCreator());
+            User user = userMapper.findById(post.getCreator());
             PostDTO postDTO = new PostDTO();
-            BeanUtils.copyProperties(post,postDTO);
+            BeanUtils.copyProperties(post, postDTO);
             postDTO.setUser(user);
             postDTOList.add(postDTO);
         }
@@ -46,10 +46,24 @@ public class PostService {
     }
 
     public PostDTO getById(String id) {
-        Post post =  postMapper.getById(id);
+        Post post = postMapper.getById(id);
         PostDTO postDTO = new PostDTO();
-        BeanUtils.copyProperties(post,postDTO);
+        BeanUtils.copyProperties(post, postDTO);
         postDTO.setUser(userMapper.findById(post.getCreator()));
         return postDTO;
+    }
+
+    public void createOrUpdate(Post post) {
+        if (post.getId() == null) {
+            post.setGmtCreate(System.currentTimeMillis());
+            post.setGmtModified(post.getGmtCreate());
+            System.out.println("[Create] post " + post.getTitle());
+            postMapper.create(post);
+        } else {
+            post.setGmtModified(System.currentTimeMillis());
+            System.out.println("[Update] post "+ post.getTitle());
+            System.out.println("    - gmt_modified: "+ post.getGmtCreate());
+            postMapper.update(post);
+        }
     }
 }

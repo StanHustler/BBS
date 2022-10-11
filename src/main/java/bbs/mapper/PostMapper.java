@@ -1,10 +1,7 @@
 package bbs.mapper;
 
 import bbs.model.Post;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 
@@ -23,4 +20,8 @@ public interface PostMapper {
 
     @Select("select * from post where id = #{id}")
     Post getById(@Param("id") String id);
+
+    @Update("update post set title= #{title}, description= #{description},gmt_modified= #{gmtModified}, tag= #{tag}" +
+            "where id = #{id}")
+    void update(Post post);
 }
