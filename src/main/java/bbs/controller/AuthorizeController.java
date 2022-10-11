@@ -5,6 +5,7 @@ import bbs.dto.GithubUser;
 import bbs.mapper.UserMapper;
 import bbs.model.User;
 import bbs.provider.GithubProvider;
+import bbs.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -31,6 +32,8 @@ public class AuthorizeController {
 
     @Autowired
     private UserMapper userMapper;
+    @Autowired
+    private UserService userService;
 
     @GetMapping("/callback")
     public String callback(@RequestParam(name = "code") String code,
@@ -55,11 +58,9 @@ public class AuthorizeController {
             String token = UUID.randomUUID().toString();
             user.setToken(token);
             user.setAccountId(String.valueOf(githubUser.getId()));
-            user.setGmtCreate(String.valueOf(System.currentTimeMillis()));
-            user.setGmtModified(user.getGmtCreate());
             user.setAvatarUrl(githubUser.getAvatar_url());
 
-            userMapper.insert(user);
+            userService.createOrUpdate(user);
             // set cookie to keep login
             response.addCookie(new Cookie("token",token));
             return "redirect:index";
