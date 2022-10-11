@@ -25,7 +25,7 @@
                         <span th:text="'作者 '+${post.user.name}">2</span> ｜
                         <span th:text="'阅读数 '+${post.viewCount}">326</span> ｜
                         <span th:text="'发布时间 '+${#dates.format(post.gmtCreate,'yyyy-MM-dd hh:mm')}">2022-10-08 12:04</span> ｜
-                        <span><a th:href="@{'/publish/'+${post.id}}">编辑</a></span>
+                        <span th:if="${session.user != null and post.user.name == session.user.name}"><a th:href="@{'/publish/'+${post.id}}">编辑</a></span>
                 </span>
                 <hr>
                 <div th:text="${post.description}"></div>
