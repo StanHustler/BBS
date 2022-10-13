@@ -5,7 +5,9 @@ import bbs.dto.PostDTO;
 import bbs.mapper.PostMapper;
 import bbs.mapper.UserMapper;
 import bbs.model.Post;
+import bbs.model.PostExample;
 import bbs.model.User;
+import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,19 +25,21 @@ public class PostService {
 
     public PaginationDTO list(Integer page, Integer size) {
         PaginationDTO paginationDTO = new PaginationDTO();
-        Integer totalCount = postMapper.count();
+        PostExample example = new PostExample();
+        Integer totalCount = (int) postMapper.countByExample(example);
         paginationDTO.setPagination(totalCount, page, size);
         // error response
         if (page < 1) page = 1;
         if (page > paginationDTO.getTotalPage()) page = paginationDTO.getTotalPage();
-
-        Integer offset = size * (page - 1);
-        List<Post> posts = postMapper.list(offset, size);
+        // page split
+        int offset = size * (page - 1);
+        List<Post> posts = postMapper.selectByExampleWithRowbounds(new PostExample(),new RowBounds(offset,size));
         List<PostDTO> postDTOList = new ArrayList<>();
 
         for (Post post : posts) {
             // put a user as property and whole post into postDTO
-            User user = userMapper.findById(post.getCreator());
+
+            User user = userMapper.selectByPrimaryKey(post.getCreator());
             PostDTO postDTO = new PostDTO();
             BeanUtils.copyProperties(post, postDTO);
             postDTO.setUser(user);
@@ -45,11 +49,11 @@ public class PostService {
         return paginationDTO;
     }
 
-    public PostDTO getById(String id) {
-        Post post = postMapper.getById(id);
+    public PostDTO getById(int id) {
+        Post post = postMapper.selectByPrimaryKey(id);
         PostDTO postDTO = new PostDTO();
         BeanUtils.copyProperties(post, postDTO);
-        postDTO.setUser(userMapper.findById(post.getCreator()));
+        postDTO.setUser(userMapper.selectByPrimaryKey(post.getCreator()));
         return postDTO;
     }
 
@@ -58,12 +62,14 @@ public class PostService {
             post.setGmtCreate(System.currentTimeMillis());
             post.setGmtModified(post.getGmtCreate());
             System.out.println("[Create] post " + post.getTitle());
-            postMapper.create(post);
+            postMapper.insert(post);
         } else {
             post.setGmtModified(System.currentTimeMillis());
             System.out.println("[Update] post "+ post.getTitle());
             System.out.println("    - gmt_modified: "+ post.getGmtCreate());
-            postMapper.update(post);
+            PostExample example = new PostExample();
+            example.createCriteria().andIdEqualTo(post.getId());
+            postMapper.updateByExampleSelective(post, example);
         }
     }
 }

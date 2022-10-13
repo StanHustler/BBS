@@ -14,7 +14,7 @@ public class PostController {
     PostService postService;
 
     @GetMapping("/post/{id}")
-    public String post(@PathVariable (name = "id") String id,
+    public String post(@PathVariable (name = "id") Integer id,
                        Model model){
         PostDTO postDTO =  postService.getById(id);
         model.addAttribute("post",postDTO);

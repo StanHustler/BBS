@@ -69,7 +69,7 @@ public class PublishController {
     }
 
     @GetMapping("/publish/{id}")
-    public String edit(@PathVariable(name = "id") String id,
+    public String edit(@PathVariable(name = "id") Integer id,
                        Model model){
         PostDTO post = postService.getById(id);
         model.addAttribute("title",post.getTitle());
